@@ -4,11 +4,6 @@ from random import choice
 app = Flask(__name__)
 json.provider.DefaultJSONProvider.ensure_ascii = False
 
-about_me = {
-    "name": "Плужников",
-    "surname": "Михаил",
-    "email": "someadres@somepost.ru"
-}
 
 quotes = [
     {
@@ -49,16 +44,6 @@ quotes = [
 ]
 
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!!!</p>"
-
-
-@app.route("/about")
-def about_author():
-    return about_me
-
-
 @app.route("/quotes")
 def get_quotes():
     return quotes
@@ -76,7 +61,7 @@ def get_quote_by_id(quote_id):
 @app.route("/quotes/count")
 def quotes_count():
     return {
-        "count": len(quotes)
+        "quantity": len(quotes)
     }
 
 
@@ -137,4 +122,3 @@ def quote_search():
     if rating is not None:
         result = [quote for quote in quotes if rating == quote["rating"]]
         return result
-
