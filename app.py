@@ -116,8 +116,13 @@ def quote_search():
     args = request.args
     author = args.get("author", type=str)
     rating = args.get("rating", type=int)
+    rating_min = args.get("rating_min", type=int)
+    rating_max = args.get("rating_max", type=int)
     if None not in (author, rating):
         result = [quote for quote in quotes if author == quote["author"] and rating == quote["rating"]]
+        return result
+    if None not in (rating_min, rating_max):
+        result = [quote for quote in quotes if rating_min-1 < quote["rating"] < rating_max+1]
         return result
     if author is not None:
         result = [quote for quote in quotes if author == quote["author"]]
