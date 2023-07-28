@@ -61,7 +61,7 @@ def get_quote_by_id(quote_id):
 @app.route("/quotes/count")
 def quotes_count():
     return {
-        "quantity": len(quotes)
+        "count": len(quotes)
     }
 
 
