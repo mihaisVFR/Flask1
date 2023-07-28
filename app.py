@@ -128,12 +128,13 @@ def quote_search():
     args = request.args
     author = args.get("author", type=str)
     rating = args.get("rating", type=int)
-    result = []
-    print(author, type(rating))
     if None not in (author, rating):
         result = [quote for quote in quotes if author == quote["author"] and rating == quote["rating"]]
+        return result
     if author is not None:
         result = [quote for quote in quotes if author == quote["author"]]
+        return result
     if rating is not None:
         result = [quote for quote in quotes if rating == quote["rating"]]
-    return result
+        return result
+
