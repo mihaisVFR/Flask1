@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "93f2fbe8-573a-4e9e-aca0-8b6ed9b74524",
+		"name": "Flask1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28755032"
+	},
+	"item": [
+		{
+			"name": "Get all quotes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get all quotes",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:5000/quotes",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"quotes"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.3.6 Python/3.11.4"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 27 Jul 2023 11:14:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "689"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"author\": \"Waldi Ravens\",\n        \"id\": 5,\n        \"text\": \"Программирование на С похоже на быстрые танцы на только что отполированном полу людей с острыми бритвами в руках.\"\n    },\n    {\n        \"author\": \"Mosher’s Law of Software Engineering\",\n        \"id\": 6,\n        \"text\": \"Не волнуйтесь, если что-то не работает. Если бы всё работало, вас бы уволили.\"\n    },\n    {\n        \"author\": \"Yoggi Berra\",\n        \"id\": 8,\n        \"text\": \"В теории, теория и практика неразделимы. На практике это не так.\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "edit by id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/3",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create quote",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"author\":\"New author\",\n    \"text\": \"Новая цитата\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/quotes",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/3",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "random_quote",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/random",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_quote",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/3",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filter_by_rate&author",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/filter?author=Rick Cook&rating=4",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "author",
+							"value": "Rick Cook"
+						},
+						{
+							"key": "rating",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "count_quotes",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "filter_by_rate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/quotes/filter?rating_min=4&rating_max=5",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"quotes",
+						"filter"
+					],
+					"query": [
+						{
+							"key": "rating_min",
+							"value": "4"
+						},
+						{
+							"key": "rating_max",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
