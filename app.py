@@ -1,4 +1,4 @@
-from flask import Flask, abort, request
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from pathlib import Path
@@ -140,7 +140,9 @@ def quote_search():
     rating_param = args.get("rating", type=str)
 
     if None not in (author_param, rating_param):
-        results = QuoteModel.query.filter(and_(QuoteModel.author.has(name=author_param), QuoteModel.rate == rating_param))
+        results = QuoteModel.query.filter(
+            and_(QuoteModel.author.has(name=author_param), QuoteModel.rate == rating_param)
+        )
         result_dict = [result.to_dict() for result in results]
         return result_dict
 
@@ -153,4 +155,3 @@ def quote_search():
         rates = QuoteModel.query.filter(QuoteModel.rate == rating_param).all()
         rating_dict = [rating.to_dict() for rating in rates]
         return rating_dict
-
