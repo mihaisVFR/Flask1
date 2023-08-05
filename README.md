@@ -36,11 +36,13 @@
 5. Создайте репозиторий миграции `flask db init`
 6. Cоздать первоначальную миграцию `flask db migrate -m "Initial migration"`
 7. Применить изменения к БД `flask db upgrade`
-8. Cсоздать записи в БД (например с помощью POSTMAN `127.0.0.1:5000/authors` - создать автора
-   `127.0.0.1:5000/authors/1/quotes` - создать цитату для автора или через терминал
+8. Cоздать записи в БД например с помощью POSTMAN:
+   `127.0.0.1:5000/authors` - создать автора
+   `127.0.0.1:5000/authors/1/quotes` - создать цитату для автора.
+    Или через терминал:
    `from app import db, QuoteModel, AuthorModel` затем создать автора `author = AuthorModel("Цой")`,
    `db.session.add(author)` , `db.session.commit()` затем добавить автору цитату `q1 = QuoteModel(author, 'белый снег,серый лед')
-   "белый снег,серый лед")` , `db.session.add(q1)` , `db.session.commit()` )
+   "белый снег,серый лед")` , `db.session.add(q1)` , `db.session.commit()` 
 5. Запустите сервер из терминала `flask run --debug 127.0.0.1:5000`
 
 ### блок-1
