@@ -32,6 +32,7 @@ class QuoteModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey(AuthorModel.id))
     text = db.Column(db.String(255), unique=False)
+    rate = db.Column(db.Integer, unique=False, nullable=False, default="1", server_default="1")
 
     def __init__(self, author, text):
         self.author_id = author.id
