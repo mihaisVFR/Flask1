@@ -2,6 +2,7 @@ from flask import Flask, abort, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from pathlib import Path
+from sqlalchemy import and_
 
 BASE_DIR = Path(__file__).parent
 app = Flask(__name__)
@@ -42,7 +43,8 @@ class QuoteModel(db.Model):
         return {
             "id": self.id,
             "text": self.text,
-            "author": self.author.to_dict()
+            "author": self.author.to_dict(),
+            "rate": self.rate
         }
 
 
@@ -129,3 +131,26 @@ def del_quote(quote_id):
         db.session.commit()
         return "", 204
     return f"Quote with id={quote_id} not found", 404
+
+
+@app.route('/quotes/filter', methods=['GET'])
+def quote_search():
+    args = request.args
+    author_param = args.get("author", type=str)
+    rating_param = args.get("rating", type=str)
+
+    if None not in (author_param, rating_param):
+        results = QuoteModel.query.filter(and_(QuoteModel.author.has(name=author_param), QuoteModel.rate == rating_param))
+        result_dict = [result.to_dict() for result in results]
+        return result_dict
+
+    if author_param is not None:
+        authors = QuoteModel.query.filter(QuoteModel.author.has(name=author_param)).all()
+        authors_dict = [author.to_dict() for author in authors]
+        return authors_dict
+
+    if rating_param is not None:
+        rates = QuoteModel.query.filter(QuoteModel.rate == rating_param).all()
+        rating_dict = [rating.to_dict() for rating in rates]
+        return rating_dict
+
