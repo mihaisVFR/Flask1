@@ -41,8 +41,8 @@
    `127.0.0.1:5000/authors/1/quotes` - создать цитату для автора.
     Или через терминал:
    `from app import db, QuoteModel, AuthorModel` затем создать автора `author = AuthorModel("Цой")`,
-   `db.session.add(author)` , `db.session.commit()` затем добавить автору цитату `q1 = QuoteModel(author, 'белый снег,серый лед')
-   "белый снег,серый лед")` , `db.session.add(q1)` , `db.session.commit()` 
+   `db.session.add(author)` , `db.session.commit()` затем добавить автору цитату 
+   `q1 = QuoteModel(author, 'белый снег,серый лед')` `db.session.add(q1)` , `db.session.commit()` 
 5. Запустите сервер из терминала `flask run --debug 127.0.0.1:5000`
 
 ### блок-1
