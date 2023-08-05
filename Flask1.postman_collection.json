@@ -98,7 +98,7 @@
 			"response": []
 		},
 		{
-			"name": "Create quote",
+			"name": "Create quote_without_db",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -176,8 +176,17 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
 				"url": {
-					"raw": "127.0.0.1:5000/quotes/3",
+					"raw": "127.0.0.1:5000/quotes/11",
 					"host": [
 						"127",
 						"0",
@@ -187,7 +196,7 @@
 					"port": "5000",
 					"path": [
 						"quotes",
-						"3"
+						"11"
 					]
 				}
 			},
@@ -262,6 +271,76 @@
 						}
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "add_author",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ChelMedvedoSvin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/authors",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create_new_quote",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"text\": \"Эрик Картмэн был прав\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/authors/3/quotes",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"authors",
+						"3",
+						"quotes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_authors",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}
