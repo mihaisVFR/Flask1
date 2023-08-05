@@ -3,7 +3,7 @@
   Для запуска и проверки функционала первой части:
 1. Создать venv: `python3 -m venv <venv_name>`
 2. Активировать venv: `source venv_name/bin/activate`
-3. Устанавливаите зависимости: `pip install -r requirements.txt`
+3. Установите зависимости: `pip install -r requirements.txt`
 4. Функционал находится в файле app_with_out_db.py
    (Переименуйте файлы app_with_out_db.py в app.py, а app.py в app_with_db.py)
 5. Запустите сервер из терминала `flask run --debug 127.0.0.1:5000`
@@ -30,7 +30,7 @@
   Для запуска и проверки функционала второй части части:
 1. Если не создан, создать venv: `python3 -m venv <venv_name>`
 2. Активировать venv: `source venv_name/bin/activate`
-3. Если не установленны, устанавлите зависимости: `pip install -r requirements.txt`
+3. Если не установленны, установите зависимости: `pip install -r requirements.txt`
 4. Функционал находится в файле app.py
    Если файл был переименован для проверки первой части переименуйте обратно в app.py 
 5. Создайте репозиторий миграции `flask db init`
