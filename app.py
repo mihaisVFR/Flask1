@@ -1,132 +1,130 @@
-from flask import Flask, json, request
-from random import choice
+from flask import Flask, abort, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from pathlib import Path
 
+BASE_DIR = Path(__file__).parent
 app = Flask(__name__)
-json.provider.DefaultJSONProvider.ensure_ascii = False
+app.config['JSON_AS_ASCII'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{BASE_DIR / 'main.db'}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.app_context().push()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
-quotes = [
-    {
-        "id": 2,
-        "author": "Rick Cook",
-        "text": "Цитата для теста поиска по рейтингу.",
-        "rating": 4
-    },
-    {
-        "id": 3,
-        "author": "Rick Cook",
-        "text": "Программирование сегодня — это гонка разработчиков программ, стремящихся писать программы "
-                "с большей и лучшей идиотоустойчивостью, и вселенной, которая пытается создать больше отборных идиотов."
-                " Пока вселенная побеждает.",
-        "rating": 5
-    },
+class AuthorModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True)
+    quotes = db.relationship('QuoteModel', backref='author', lazy='dynamic',  cascade="all, delete-orphan")
 
-    {
-        "id": 5,
-        "author": "Waldi Ravens",
-        "text": "Программирование на С похоже на быстрые танцы на только что отполированном полу людей "
-                "с острыми бритвами в руках.",
-        "rating": 3
-    },
-    {
-        "id": 6,
-        "author": "Mosher’s Law of Software Engineering",
-        "text": "Не волнуйтесь, если что-то не работает. Если бы всё работало, вас бы уволили.",
-        "rating": 4
-    },
-    {
-        "id": 8,
-        "author": "Yoggi Berra",
-        "text": "В теории, теория и практика неразделимы. На практике это не так.",
-        "rating": 5
-    },
+    def __init__(self, name):
+        self.name = name
 
-]
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name
+        }
+
+
+class QuoteModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey(AuthorModel.id))
+    text = db.Column(db.String(255), unique=False)
+
+    def __init__(self, author, text):
+        self.author_id = author.id
+        self.text = text
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.text,
+            "author": self.author.to_dict()
+        }
+
+
+# AUTHORS
+# /authors  <--- all authors
+@app.route("/authors")
+def get_authors():
+    authors = AuthorModel.query.all()
+    authors_dict = [author.to_dict() for author in authors]
+    return authors_dict
+
+
+@app.route("/authors/<int:author_id>")
+def get_author_by_id(author_id):
+    author = AuthorModel.query.get(author_id)
+    if author is None:
+        return f"Author with id={author_id} not found", 404
+    return author.to_dict(), 200
+
+
+@app.route("/authors", methods=["POST"])
+def create_author():
+    new_author = request.json
+    author = AuthorModel(**new_author)
+    db.session.add(author)
+    db.session.commit()
+    return author.to_dict(), 201
 
 
 @app.route("/quotes")
 def get_quotes():
-    return quotes
+    quotes = QuoteModel.query.all()
+    quotes_dict = [quote.to_dict() for quote in quotes]
+    return quotes_dict
 
 
 @app.route("/quotes/<int:quote_id>")
 def get_quote_by_id(quote_id):
-    for quote in quotes:
-        if quote["id"] == quote_id:
-            return quote
-
-    return f"Quote with id={quote_id} not found", 404
-
-
-@app.route("/quotes/count")
-def quotes_count():
-    return {
-        "count": len(quotes)
-    }
+    quote = QuoteModel.query.get(quote_id)
+    if quote is None:
+        return f"Quote with id={quote_id} not found", 404
+    return quote.to_dict(), 200
 
 
-@app.route("/quotes/random")
-def random_quote():
-    return choice(quotes)
-
-
-def new_id():
-    return quotes[-1]["id"] + 1
-
-
-@app.route("/quotes", methods=['POST'])
-def create_quote():
+@app.route("/authors/<int:author_id>/quotes", methods=["POST"])
+def create_quote(author_id):
+    author = AuthorModel.query.get(author_id)
     new_quote = request.json
-    new_quote["id"] = new_id()
-    if not new_quote.get("rating"):
-        new_quote["rating"] = 1
-    quotes.append(new_quote)
-    return new_quote, 201
+    quote = QuoteModel(author, **new_quote)
+    db.session.add(quote)
+    db.session.commit()
+    return quote.to_dict(), 201
+
+
+@app.route("/quotes/<int:quote_id>")
+def find_quotes(quote_id):
+    quote = QuoteModel.query.get(quote_id)
+    if quote is not None:
+        return quote.to_dict()
+    else:
+        return f"Quote with id={quote_id} not found", 404
 
 
 @app.route("/quotes/<int:quote_id>", methods=['PUT'])
 def edit_quote(quote_id):
     new_data = request.json
-    for quote in quotes:
-        if quote["id"] == quote_id:
-
-            if new_data.get("author"):
-                quote["author"] = new_data["author"]
-
-            if new_data.get("text"):
-                quote["text"] = new_data["text"]
-
-            if new_data.get("rating"):
-                if new_data.get("rating") < 6 or new_data.get("rating") < 1:
-                    quote["rating"] = new_data["rating"]
-            return quote, 200
+    quote = QuoteModel.query.get(quote_id)
+    if quote is not None:
+        if new_data.get("author"):
+            quote.author = new_data["author"]
+        if new_data.get("text"):
+            quote.text = new_data["text"]
+        db.session.commit()
+        return quote.to_dict(), 200
     return f"Quote with id={quote_id} not found", 404
 
 
 @app.route("/quotes/<int:quote_id>", methods=['DELETE'])
-def delete(quote_id):
-    for quote in quotes:
-        if quote["id"] == quote_id:
-            quotes.remove(quote)
-    return f"Quote with id {quote_id} is deleted.", 200
+def del_quote(quote_id):
+    quote = QuoteModel.query.get(quote_id)
 
-
-@app.route('/quotes/filter', methods=['GET'])
-def quote_search():
-    args = request.args
-    author = args.get("author", type=str)
-    rating = args.get("rating", type=int)
-    rating_min = args.get("rating_min", type=int)
-    rating_max = args.get("rating_max", type=int)
-    if None not in (author, rating):
-        result = [quote for quote in quotes if author == quote["author"] and rating == quote["rating"]]
-        return result
-    if None not in (rating_min, rating_max):
-        result = [quote for quote in quotes if rating_min <= quote["rating"] <= rating_max]
-        return result
-    if author is not None:
-        result = [quote for quote in quotes if author == quote["author"]]
-        return result
-    if rating is not None:
-        result = [quote for quote in quotes if rating == quote["rating"]]
-        return result
+    if quote is not None:
+        db.session.delete(quote)
+        db.session.commit()
+        return "", 204
+    return f"Quote with id={quote_id} not found", 404
